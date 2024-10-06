@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -17,12 +18,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class AppInitializer implements ServletContextListener {
     private static final Logger log = getLogger(AppInitializer.class);
 
+    public static final String MEALS_ATTRIBUTE = "meals";
+    public static final String CALORIES_PER_DAY_ATTRIBUTE = "caloriesPerDay";
+
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContextListener.super.contextInitialized(event);
         log.info("Start of the global context initializing");
-        AppGlobalContext.setMeals(getInitMeal());
-        AppGlobalContext.setCaloriesPerDay(getCaloriesPerDay());
+        ServletContext context = event.getServletContext();
+        context.setAttribute(MEALS_ATTRIBUTE, getInitMeal());
+        context.setAttribute(CALORIES_PER_DAY_ATTRIBUTE, getCaloriesPerDay());
     }
 
     private List<Meal> getInitMeal() {
