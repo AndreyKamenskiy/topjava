@@ -1,0 +1,16 @@
+.excess {
+    color: red
+}
+
+table, th, tr, td {
+    border: 1px solid grey;
+}
+
+table {
+    color: green
+}
+
+th {
+    color: black
+}
+
