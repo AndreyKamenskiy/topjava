@@ -31,8 +31,6 @@ public class MealServlet extends HttpServlet {
     private static final String EDIT_ACTION = "edit";
     private static final String DELETE_ACTION = "delete";
     private static final String CREATE_ACTION = "create";
-    private static final String ERROR_MESSAGE = "errorMess";
-    private static final String INFO_MESSAGE = "infoMess";
     private static final String MEALS_PAGE = "/meals.jsp";
     private static final String MEALS_REDIRECT_PAGE = "/meals";
     private static final String EDIT_PAGE = "/editMeal.jsp";
@@ -44,7 +42,6 @@ public class MealServlet extends HttpServlet {
             IOException {
         log.debug("process doGet {}?{}", request.getRequestURI(), request.getQueryString());
         MealDao mealDao = getMealDao();
-        clearMessages(request);
         String action = request.getParameter(ACTION_PARAM);
         String pageName = MEALS_PAGE;
         if (EDIT_ACTION.equalsIgnoreCase(action)) {
@@ -53,12 +50,7 @@ public class MealServlet extends HttpServlet {
             prepareEditMealAttributes(mealDao, mealId, request);
         } else if (DELETE_ACTION.equalsIgnoreCase(action)) {
             int mealId = getMealId(request);
-            boolean res = mealDao.delete(mealId);
-            if (res) {
-                addMessage(request, INFO_MESSAGE, String.format("Deleted meal with id = %d", mealId));
-            } else {
-                addMessage(request, ERROR_MESSAGE, String.format("Can't delete meal with id = %d", mealId));
-            }
+            mealDao.delete(mealId);
             response.sendRedirect(request.getContextPath() + MEALS_REDIRECT_PAGE);
             return;
         } else if (CREATE_ACTION.equalsIgnoreCase(action)) {
@@ -117,20 +109,9 @@ public class MealServlet extends HttpServlet {
     private void prepareEditMealAttributes(MealDao mealDao, Integer mealId, HttpServletRequest request) {
         log.debug("prepare edit meal attributes");
         Meal meal = mealId != null ? mealDao.get(mealId) : null;
-        if (meal == null) {
-            addMessage(request, ERROR_MESSAGE, String.format("Can't find meal with id = %d", mealId));
-        } else {
+        if (meal != null) {
             request.setAttribute(MEAL_ATTRIBUTE, meal);
         }
-    }
-
-    private void addMessage(HttpServletRequest request, String type, String mess) {
-        request.setAttribute(type, mess);
-    }
-
-    private void clearMessages(HttpServletRequest request) {
-        request.setAttribute(ERROR_MESSAGE, null);
-        request.setAttribute(INFO_MESSAGE, null);
     }
 
     private String decode(String encoded) throws UnsupportedEncodingException {

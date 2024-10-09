@@ -15,7 +15,6 @@
     <a href="meals?action=create">Add meal</a>
 </div>
 <br>
-<jsp:include page="/WEB-INF/messages.jsp" />
 <table class="drop-shadow">
     <tr>
         <th>Date</th>

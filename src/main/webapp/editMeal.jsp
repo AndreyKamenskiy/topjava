@@ -10,7 +10,6 @@
 <hr>
 <h2>Edit meal</h2>
 <br>
-<jsp:include page="/WEB-INF/messages.jsp"/>
 <form id="myForm" method="post">
     <label for="dateTime">DateTime</label>
     <input type="datetime-local" id="dateTime" name="dateTime" required <c:if test="${not empty meal}">value
