@@ -25,7 +25,7 @@
     </tr>
     <c:forEach var="mealTo" items="${mealsToList}">
         <tr <c:if test="${mealTo.excess}">class="excess"</c:if>>
-            <td>${tu:formatLocalDateTime(mealTo.dateTime, 'dd.MM.yyyy HH:mm')}</td>
+            <td>${tu:formatLocalDateTime(mealTo.dateTime)}</td>
             <td>${mealTo.description}</td>
             <td>${mealTo.calories}</td>
             <td><a href="meals?action=edit&mealId=<c:out value="${mealTo.id}"/>">Update</a></td>

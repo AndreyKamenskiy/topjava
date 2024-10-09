@@ -4,47 +4,17 @@ import java.time.LocalDateTime;
 
 public class MealTo {
     private final LocalDateTime dateTime;
-
-    @SuppressWarnings("unused")
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
     private final String description;
-
-    @SuppressWarnings("unused")
-    public String getDescription() {
-        return description;
-    }
-
     private final int calories;
-
-    @SuppressWarnings("unused")
-    public int getCalories() {
-        return calories;
-    }
-
     private final boolean excess;
-
-    @SuppressWarnings("unused")
-    public boolean getExcess() {
-        return excess;
-    }
-
     private final int id;
 
-    @SuppressWarnings("unused")
-    public int getId() {
-        return id;
-    }
-
-
-    public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess, int id) {
+    public MealTo(int id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
         this.excess = excess;
-        this.id = id;
     }
 
     @Override
@@ -56,4 +26,30 @@ public class MealTo {
                 ", excess=" + excess +
                 '}';
     }
+
+    @SuppressWarnings("unused")
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    @SuppressWarnings("unused")
+    public String getDescription() {
+        return description;
+    }
+
+    @SuppressWarnings("unused")
+    public int getCalories() {
+        return calories;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean getExcess() {
+        return excess;
+    }
+
+    @SuppressWarnings("unused")
+    public int getId() {
+        return id;
+    }
+
 }
