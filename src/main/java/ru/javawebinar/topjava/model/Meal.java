@@ -21,7 +21,7 @@ public class Meal {
     }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
-        this(0, dateTime, description, calories);
+        this(null, dateTime, description, calories);
     }
 
     public LocalDateTime getDateTime() {

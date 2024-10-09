@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.util.MealsUtil.filteredByStreams;
@@ -35,19 +33,26 @@ public class MealServlet extends HttpServlet {
     private static final String MEALS_REDIRECT_PAGE = "/meals";
     private static final String EDIT_PAGE = "/editMeal.jsp";
 
-    private MealDao mealDao = null;
+    private MealDao mealDao;
+    private int caloriesPerDay;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        mealDao = (MealDao) getServletContext().getAttribute(MEAL_DAO_IMPLEMENTATION);
+        caloriesPerDay = (int) getServletContext().getAttribute(CALORIES_PER_DAY_ATTRIBUTE);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
         log.debug("process doGet {}?{}", request.getRequestURI(), request.getQueryString());
-        MealDao mealDao = getMealDao();
         String action = request.getParameter(ACTION_PARAM);
         String pageName = MEALS_PAGE;
         if (EDIT_ACTION.equalsIgnoreCase(action)) {
             int mealId = getMealId(request);
             pageName = EDIT_PAGE;
-            prepareEditMealAttributes(mealDao, mealId, request);
+            prepareEditMealAttributes(mealId, request);
         } else if (DELETE_ACTION.equalsIgnoreCase(action)) {
             int mealId = getMealId(request);
             mealDao.delete(mealId);
@@ -56,7 +61,7 @@ public class MealServlet extends HttpServlet {
         } else if (CREATE_ACTION.equalsIgnoreCase(action)) {
             pageName = EDIT_PAGE;
         } else {
-            prepareMealListAttributes(mealDao, request);
+            prepareMealListAttributes(request);
         }
         log.debug("forward to {}", pageName);
         request.getRequestDispatcher(pageName).forward(request, response);
@@ -73,13 +78,9 @@ public class MealServlet extends HttpServlet {
         String caloriesStr = request.getParameter("calories");
         int calories = Integer.parseInt(caloriesStr);
         if (EDIT_ACTION.equalsIgnoreCase(action)) {
-            if (description != null && !description.isEmpty()) {
-                getMealDao().update(new Meal(getMealId(request), dateTime, description, calories));
-            }
+            mealDao.update(new Meal(getMealId(request), dateTime, description, calories));
         } else if (CREATE_ACTION.equalsIgnoreCase(action)) {
-            if (description != null && !description.isEmpty()) {
-                getMealDao().add(new Meal(null, dateTime, description, calories));
-            }
+            mealDao.add(new Meal(null, dateTime, description, calories));
         }
         response.sendRedirect(request.getContextPath() + MEALS_REDIRECT_PAGE);
     }
@@ -88,29 +89,19 @@ public class MealServlet extends HttpServlet {
         return Integer.parseInt(request.getParameter(ID_PARAM));
     }
 
-    private MealDao getMealDao() {
-        if (mealDao == null) {
-            mealDao = (MealDao) getServletContext().getAttribute(MEAL_DAO_IMPLEMENTATION);
-        }
-        return mealDao;
-    }
-
-    private void prepareMealListAttributes(MealDao mealDao, HttpServletRequest request) {
+    private void prepareMealListAttributes(HttpServletRequest request) {
         log.debug("prepare meal list attributes");
-        int caloriesPerDay;
-        caloriesPerDay = (int) getServletContext().getAttribute(CALORIES_PER_DAY_ATTRIBUTE);
-        List<MealTo> mealsTo = filteredByStreams(mealDao.getAll(), null, null, caloriesPerDay)
-                .stream()
-                .sorted(Comparator.comparing(MealTo::getDateTime))
-                .collect(Collectors.toList());
+        List<MealTo> mealsTo = filteredByStreams(mealDao.getAll(), null, null, caloriesPerDay);
         request.setAttribute(MEALS_TO_ATTRIBUTE, mealsTo);
     }
 
-    private void prepareEditMealAttributes(MealDao mealDao, Integer mealId, HttpServletRequest request) {
+    private void prepareEditMealAttributes(int mealId, HttpServletRequest request) throws IOException {
         log.debug("prepare edit meal attributes");
-        Meal meal = mealId != null ? mealDao.get(mealId) : null;
+        Meal meal = mealDao.get(mealId);
         if (meal != null) {
             request.setAttribute(MEAL_ATTRIBUTE, meal);
+        } else {
+            throw new IOException(String.format("A non-existent meal id %d was requested", mealId));
         }
     }
 
