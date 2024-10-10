@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.exception.NoSuchEntityException;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 
@@ -37,8 +38,7 @@ public class MealServlet extends HttpServlet {
     private int caloriesPerDay;
 
     @Override
-    public void init() throws ServletException {
-        super.init();
+    public void init() {
         mealDao = (MealDao) getServletContext().getAttribute(MEAL_DAO_IMPLEMENTATION);
         caloriesPerDay = (int) getServletContext().getAttribute(CALORIES_PER_DAY_ATTRIBUTE);
     }
@@ -95,13 +95,13 @@ public class MealServlet extends HttpServlet {
         request.setAttribute(MEALS_TO_ATTRIBUTE, mealsTo);
     }
 
-    private void prepareEditMealAttributes(int mealId, HttpServletRequest request) throws IOException {
+    private void prepareEditMealAttributes(int mealId, HttpServletRequest request) throws ServletException {
         log.debug("prepare edit meal attributes");
         Meal meal = mealDao.get(mealId);
         if (meal != null) {
             request.setAttribute(MEAL_ATTRIBUTE, meal);
         } else {
-            throw new IOException(String.format("A non-existent meal id %d was requested", mealId));
+            throw new NoSuchEntityException(String.format("A non-existent meal id %d was requested", mealId));
         }
     }
 
