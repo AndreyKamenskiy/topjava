@@ -95,7 +95,7 @@ public class MealServlet extends HttpServlet {
         request.setAttribute(MEALS_TO_ATTRIBUTE, mealsTo);
     }
 
-    private void prepareEditMealAttributes(int mealId, HttpServletRequest request) throws ServletException {
+    private void prepareEditMealAttributes(int mealId, HttpServletRequest request) {
         log.debug("prepare edit meal attributes");
         Meal meal = mealDao.get(mealId);
         if (meal != null) {
