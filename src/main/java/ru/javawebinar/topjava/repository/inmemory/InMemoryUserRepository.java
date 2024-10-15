@@ -25,6 +25,8 @@ public class InMemoryUserRepository implements UserRepository {
     private final Map<Integer, String> idToEmail = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
+    //todo: test for atomic. think about...
+
     @Override
     public boolean delete(int id) {
         log.info("delete {}", id);
