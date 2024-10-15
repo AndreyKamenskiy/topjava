@@ -19,7 +19,7 @@ public class DateTimeUtil {
 
     public static boolean isBetweenClosed(@NotNull LocalDate ld, @Nullable LocalDate from, @Nullable LocalDate to) {
         return (from == null || ld.compareTo(from) >= 0) &&
-                (to == null || ld.compareTo(to) <=0);
+                (to == null || ld.compareTo(to) <= 0);
     }
 
     public static String toString(LocalDateTime ldt) {

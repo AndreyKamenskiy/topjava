@@ -21,6 +21,31 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+    <jsp:useBean id="fromDate" type="java.time.LocalDate[]" scope="request"/>
+    <jsp:useBean id="toDate" type="java.time.LocalDate[]" scope="request"/>
+    <jsp:useBean id="fromTime" type="java.time.LocalTime[]" scope="request"/>
+    <jsp:useBean id="toTime" type="java.time.LocalTime[]" scope="request"/>
+    <div>
+        <form id="filter" method="post" action="meals?action=filter">
+
+                <label for="fromDateInput">От даты (включая)</label>
+                <input type="date" id="fromDateInput" autocomplete="off" name="fromDate"
+                       value="${requestScope.fromDate[0]}">
+                <label for="toDateInput">До даты (включая)</label>
+                <input type="date" id="toDateInput" autocomplete="off" name="toDate"
+                       value="${requestScope.toDate[0]}">
+
+                <label for="fromTimeInput">От времени (включая)</label>
+                <input type="time" id="fromTimeInput" autocomplete="off" name="fromTime"
+                       value="${requestScope.fromTime[0]}">
+
+                <label for="toTimeInput">До времени (исключая)</label>
+                <input type="time" id="toTimeInput" autocomplete="off" name="toTime"
+                       value="${requestScope.toTime[0]}">
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
