@@ -27,21 +27,20 @@
     <jsp:useBean id="toTime" type="java.time.LocalTime[]" scope="request"/>
     <div>
         <form id="filter" method="post" action="meals?action=filter">
-
                 <label for="fromDateInput">От даты (включая)</label>
                 <input type="date" id="fromDateInput" autocomplete="off" name="fromDate"
-                       value="${requestScope.fromDate[0]}">
+                       value="${fromDate[0]}">
                 <label for="toDateInput">До даты (включая)</label>
                 <input type="date" id="toDateInput" autocomplete="off" name="toDate"
-                       value="${requestScope.toDate[0]}">
+                       value="${toDate[0]}">
 
                 <label for="fromTimeInput">От времени (включая)</label>
                 <input type="time" id="fromTimeInput" autocomplete="off" name="fromTime"
-                       value="${requestScope.fromTime[0]}">
+                       value="${fromTime[0]}">
 
                 <label for="toTimeInput">До времени (исключая)</label>
                 <input type="time" id="toTimeInput" autocomplete="off" name="toTime"
-                       value="${requestScope.toTime[0]}">
+                       value="${toTime[0]}">
             <button type="submit">Filter</button>
         </form>
     </div>
