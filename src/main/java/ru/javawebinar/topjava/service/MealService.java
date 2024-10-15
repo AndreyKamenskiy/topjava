@@ -19,46 +19,38 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 public class MealService {
 
     private final MealRepository repository;
-    private final UserService userService;
 
-    public MealService(MealRepository repository, UserService userService) {
+    public MealService(MealRepository repository) {
         this.repository = repository;
-        this.userService = userService;
     }
 
     public Meal create(int userId, Meal meal) {
-        return repository.save(checkUserId(userId), meal);
+        return repository.save(userId, meal);
     }
 
     public Meal update(int userId, Meal meal) {
-        return checkNotFoundWithId(repository.save(checkUserId(userId), meal), meal.getId());
+        return checkNotFoundWithId(repository.save(userId, meal), meal.getId());
     }
 
     public void delete(int userId, int id) {
-        checkNotFoundWithId(repository.delete(checkUserId(userId), id), id);
+        checkNotFoundWithId(repository.delete(userId, id), id);
     }
 
     public Meal get(int userId, int id) {
-        return checkNotFoundWithId(repository.get(checkUserId(userId), id), id);
+        return checkNotFoundWithId(repository.get(userId, id), id);
     }
 
     public List<Meal> getAll(int userId) {
-        return new ArrayList<>(repository.getAll(checkUserId(userId)));
+        return new ArrayList<>(repository.getAll(userId));
     }
 
     public List<Meal> filter(int userId, LocalDate fromDate, LocalDate toDate) {
-        return getAll(userId).stream()
-                .filter(meal -> isBetweenClosed(meal.getDate(), fromDate, toDate))
-                .collect(Collectors.toList());
+        return repository.filter(userId, fromDate, toDate);
     }
 
     public List<MealTo> filter(int userId, int caloriesPerDay, LocalDate fromDate, LocalDate toDate,
                                LocalTime fromTime, LocalTime toTime) {
         return getFilteredTos(filter(userId, fromDate, toDate), caloriesPerDay, fromTime, toTime);
-    }
-
-    private int checkUserId(int userId) {
-        return checkNotFoundWithId(userService.get(userId), userId).getId();
     }
 
 }
