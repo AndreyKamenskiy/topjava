@@ -1,8 +1,11 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -18,11 +21,11 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
     private final Map<Integer, Meal> emptyMealMap = new ConcurrentHashMap<>();
 
-
-//    todo: move initialization to another place
-    /*{
-        MealsUtil.meals.forEach(this::save);
-    }*/
+    {
+        for (int i = 0; i < MealsUtil.meals.size(); i++) {
+            save(i % 3, MealsUtil.meals.get(i));
+        }
+    }
 
     @Override
     public Meal save(int userId, Meal meal) {

@@ -14,12 +14,21 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static ru.javawebinar.topjava.model.Role.ADMIN;
+import static ru.javawebinar.topjava.model.Role.USER;
+
 @Repository
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
 
     private final Map<Integer, User> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
+
+    {
+        save(new User(null, "admin", "admin@mail.ru", "qwerty" , ADMIN));
+        save(new User(null, "user", "user@mail.ru", "qwerty" , USER));
+        save(new User(null, "lamer", "lamer@mail.ru", "qwerty" , USER));
+    }
 
     @Override
     public boolean delete(int id) {
