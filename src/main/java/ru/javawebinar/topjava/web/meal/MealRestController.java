@@ -57,4 +57,10 @@ public class MealRestController {
         return service.filter(userId, authUserCaloriesPerDay(), fromDate, toDate, fromTime, toTime);
     }
 
+    public void delete(int id) {
+        int userId = authUserId();
+        log.info("delete meal with id={} by user with id={}", id, userId);
+        service.delete(userId, id);
+    }
+
 }
