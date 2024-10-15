@@ -59,8 +59,8 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("getAll");
         return repository.values()
                 .stream()
-                .sorted((lsh, rhs) -> lsh.getName() != null && lsh.getName().equals(rhs.getName()) ?
-                        lsh.getName().compareTo(rhs.getName()) : lsh.getId().compareTo(rhs.getId()))
+                .sorted((lhs, rhs) -> lhs.getName() != null && lhs.getName().equals(rhs.getName()) ?
+                        lhs.getName().compareTo(rhs.getName()) : lhs.getEmail().compareTo(rhs.getEmail()))
                 .collect(Collectors.toList());
     }
 
