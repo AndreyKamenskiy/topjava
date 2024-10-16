@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
-import com.sun.istack.internal.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
@@ -64,7 +64,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User getByEmail(@NotNull String email) {
+    public User getByEmail(@NonNull String email) {
         log.info("getByEmail {}", email);
         return repository.values()
                 .stream()
