@@ -39,16 +39,12 @@ public class MealService {
     }
 
     public List<Meal> getAll(int userId) {
-        return new ArrayList<>(repository.getAll(userId));
-    }
-
-    public List<Meal> filter(int userId, LocalDate fromDate, LocalDate toDate) {
-        return repository.filter(userId, fromDate, toDate);
+        return repository.getAll(userId);
     }
 
     public List<MealTo> filter(int userId, int caloriesPerDay, LocalDate fromDate, LocalDate toDate,
                                LocalTime fromTime, LocalTime toTime) {
-        return getFilteredTos(filter(userId, fromDate, toDate), caloriesPerDay, fromTime, toTime);
+        return getFilteredTos(repository.filter(userId, fromDate, toDate), caloriesPerDay, fromTime, toTime);
     }
 
 }
