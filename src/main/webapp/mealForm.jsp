@@ -31,6 +31,10 @@
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">
+        <input type="hidden" name="fromDate" value="${param.fromDate}">
+        <input type="hidden" name="toDate" value="${param.toDate}">
+        <input type="hidden" name="fromTime" value="${param.fromTime}">
+        <input type="hidden" name="toTime" value="${param.toTime}">
         <dl>
             <dt>DateTime:</dt>
             <dd><input type="datetime-local" value="${meal.dateTime}" name="dateTime" required></dd>

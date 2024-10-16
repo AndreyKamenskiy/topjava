@@ -21,52 +21,56 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
+    ConfigurableApplicationContext appCtx;
     private MealRestController controller;
-
-    // user depended filters will be implemented later
-    private final LocalDate[] fromDate = new LocalDate[1];
-    private final LocalDate[] toDate = new LocalDate[1];
-    private final LocalTime[] fromTime = new LocalTime[1];
-    private final LocalTime[] toTime = new LocalTime[1];
 
     @Override
     public void init() {
-        log.info("Init spring");
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
-            controller = appCtx.getBean(MealRestController.class);
-        }
+        log.info("Init spring context");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        controller = appCtx.getBean(MealRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        log.info("Close spring context");
+        appCtx.close();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
-        String action = request.getParameter("action");
-        if ("filter".equals(action)) {
-            String dateStr = request.getParameter("fromDate");
-            fromDate[0] = dateStr != null && !dateStr.isEmpty() ? LocalDate.parse(dateStr) : null;
-            dateStr = request.getParameter("toDate");
-            toDate[0] = dateStr != null && !dateStr.isEmpty() ? LocalDate.parse(dateStr) : null;
-            String timeStr = request.getParameter("fromTime");
-            fromTime[0] = timeStr != null && !timeStr.isEmpty() ? LocalTime.parse(timeStr) : null;
-            timeStr = request.getParameter("toTime");
-            toTime[0] = timeStr != null && !timeStr.isEmpty() ? LocalTime.parse(timeStr) : null;
+        String id = request.getParameter("id");
+        String dateStr = request.getParameter("fromDate");
+        LocalDate fromDate = dateStr != null && !dateStr.isEmpty() ? LocalDate.parse(dateStr) : null;
+        dateStr = request.getParameter("toDate");
+        LocalDate toDate = dateStr != null && !dateStr.isEmpty() ? LocalDate.parse(dateStr) : null;
+        String timeStr = request.getParameter("fromTime");
+        LocalTime fromTime = timeStr != null && !timeStr.isEmpty() ? LocalTime.parse(timeStr) : null;
+        timeStr = request.getParameter("toTime");
+        LocalTime toTime = timeStr != null && !timeStr.isEmpty() ? LocalTime.parse(timeStr) : null;
+
+        Integer mealId = id == null || id.isEmpty() ? null : Integer.parseInt(id);
+        Meal meal = new Meal(mealId,
+                LocalDateTime.parse(request.getParameter("dateTime")),
+                request.getParameter("description"),
+                Integer.parseInt(request.getParameter("calories")));
+
+        log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+        if (meal.isNew()) {
+            controller.create(meal);
         } else {
-            String id = request.getParameter("id");
-            Integer mealId = id == null || id.isEmpty() ? null : Integer.parseInt(id);
-
-            Meal meal = new Meal(mealId,
-                    LocalDateTime.parse(request.getParameter("dateTime")),
-                    request.getParameter("description"),
-                    Integer.parseInt(request.getParameter("calories")));
-
-            log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-            if (meal.isNew()) {
-                controller.create(meal);
-            } else {
-                controller.update(meal, mealId);
-            }
+            controller.update(meal, mealId);
         }
-        response.sendRedirect("meals");
+        String urlStringDelete = String.format(
+                "meals?fromDate=%s&toDate=%s&fromTime=%s&toTime=%s",
+                fromDate == null ? "": fromDate,
+                toDate == null ? "": toDate,
+                fromTime == null ? "": fromTime,
+                toTime == null ? "": toTime
+        );
+        response.sendRedirect(urlStringDelete);
     }
 
     @Override
@@ -74,12 +78,28 @@ public class MealServlet extends HttpServlet {
             IOException {
         String action = request.getParameter("action");
 
+        String dateStr = request.getParameter("fromDate");
+        LocalDate fromDate = dateStr != null && !dateStr.isEmpty() ? LocalDate.parse(dateStr) : null;
+        dateStr = request.getParameter("toDate");
+        LocalDate toDate = dateStr != null && !dateStr.isEmpty() ? LocalDate.parse(dateStr) : null;
+        String timeStr = request.getParameter("fromTime");
+        LocalTime fromTime = timeStr != null && !timeStr.isEmpty() ? LocalTime.parse(timeStr) : null;
+        timeStr = request.getParameter("toTime");
+        LocalTime toTime = timeStr != null && !timeStr.isEmpty() ? LocalTime.parse(timeStr) : null;
+
         switch (action == null ? "all" : action) {
             case "delete":
                 int id = getId(request);
                 log.info("Delete id={}", id);
                 controller.delete(id);
-                response.sendRedirect("meals");
+                String urlStringDelete = String.format(
+                        "meals?fromDate=%s&toDate=%s&fromTime=%s&toTime=%s",
+                        fromDate == null ? "": fromDate,
+                        toDate == null ? "": toDate,
+                        fromTime == null ? "": fromTime,
+                        toTime == null ? "": toTime
+                );
+                response.sendRedirect(urlStringDelete);
                 break;
             case "create":
             case "update":
@@ -87,17 +107,27 @@ public class MealServlet extends HttpServlet {
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
                         controller.get(getId(request));
                 request.setAttribute("meal", meal);
-                request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
+                String urlStringUpdate = String.format(
+                        "/mealForm.jsp?fromDate=%s&toDate=%s&fromTime=%s&toTime=%s",
+                        fromDate == null ? "": fromDate,
+                        toDate == null ? "": toDate,
+                        fromTime == null ? "": fromTime,
+                        toTime == null ? "": toTime
+                );
+                request.getRequestDispatcher(urlStringUpdate).forward(request, response);
                 break;
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals", controller.filter(fromDate[0], toDate[0], fromTime[0], toTime[0]));
-                request.setAttribute("fromDate", fromDate);
-                request.setAttribute("toDate", toDate);
-                request.setAttribute("fromTime", fromTime);
-                request.setAttribute("toTime", toTime);
-                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                String urlString = String.format(
+                        "/meals.jsp?fromDate=%s&toDate=%s&fromTime=%s&toTime=%s",
+                        fromDate == null ? "": fromDate,
+                        toDate == null ? "": toDate,
+                        fromTime == null ? "": fromTime,
+                        toTime == null ? "": toTime
+                );
+                request.setAttribute("meals", controller.filter(fromDate, toDate, fromTime, toTime));
+                request.getRequestDispatcher(urlString).forward(request, response);
                 break;
         }
     }

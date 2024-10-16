@@ -21,31 +21,28 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
-    <jsp:useBean id="fromDate" type="java.time.LocalDate[]" scope="request"/>
-    <jsp:useBean id="toDate" type="java.time.LocalDate[]" scope="request"/>
-    <jsp:useBean id="fromTime" type="java.time.LocalTime[]" scope="request"/>
-    <jsp:useBean id="toTime" type="java.time.LocalTime[]" scope="request"/>
     <div>
-        <form id="filter" method="post" action="meals?action=filter">
-                <label for="fromDateInput">От даты (включая)</label>
-                <input type="date" id="fromDateInput" autocomplete="off" name="fromDate"
-                       value="${fromDate[0]}">
-                <label for="toDateInput">До даты (включая)</label>
-                <input type="date" id="toDateInput" autocomplete="off" name="toDate"
-                       value="${toDate[0]}">
+        <form id="filter" method="get" action="meals?action=filter">
+            <label for="fromDateInput">От даты (включая)</label>
+            <input type="date" id="fromDateInput" autocomplete="off" name="fromDate"
+                   value="${param.fromDate}">
+            <label for="toDateInput">До даты (включая)</label>
+            <input type="date" id="toDateInput" autocomplete="off" name="toDate"
+                   value="${param.toDate}">
 
-                <label for="fromTimeInput">От времени (включая)</label>
-                <input type="time" id="fromTimeInput" autocomplete="off" name="fromTime"
-                       value="${fromTime[0]}">
+            <label for="fromTimeInput">От времени (включая)</label>
+            <input type="time" id="fromTimeInput" autocomplete="off" name="fromTime"
+                   value="${param.fromTime}">
 
-                <label for="toTimeInput">До времени (исключая)</label>
-                <input type="time" id="toTimeInput" autocomplete="off" name="toTime"
-                       value="${toTime[0]}">
+            <label for="toTimeInput">До времени (исключая)</label>
+            <input type="time" id="toTimeInput" autocomplete="off" name="toTime"
+                   value="${param.toTime}">
             <button type="submit">Filter</button>
         </form>
     </div>
 
-    <a href="meals?action=create">Add Meal</a>
+    <a href="meals?action=create&fromDate=${param.fromDate}&toDate=${param.toDate}&fromTime=${param.fromTime}&toTime=${param.toTime}">Add
+        Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
@@ -68,8 +65,12 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
-                <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
+                <td>
+                    <a href="meals?action=update&id=${meal.id}&fromDate=${param.fromDate}&toDate=${param.toDate}&fromTime=${param.fromTime}&toTime=${param.toTime}">Update
+                    </a></td>
+                <td>
+                    <a href="meals?action=delete&id=${meal.id}&fromDate=${param.fromDate}&toDate=${param.toDate}&fromTime=${param.fromTime}&toTime=${param.toTime}">Delete</a>
+                </td>
             </tr>
         </c:forEach>
     </table>
