@@ -5,12 +5,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class SpringMain {
@@ -28,6 +30,17 @@ public class SpringMain {
                     .map(user -> user.getName() + ":" + user.getEmail())
                     .collect(Collectors.joining(",\n"))
             );
+
+            MealRepository repository = appCtx.getBean(MealRepository.class);
+            int newUserId = 100;
+            Meal testMeal = new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
+            System.out.println("test 1 save:" + (repository.save(newUserId, testMeal) == null));
+            testMeal.setId(null);
+            System.out.println("test 2 save:" + (repository.save(newUserId, testMeal) != null));
+            System.out.println("test 1 delete:" + (!repository.delete(newUserId, testMeal.getId() + 1)));
+            System.out.println("test 1 get:" + (repository.get(newUserId, testMeal.getId()) != null));
+            System.out.println("test 2 delete:" + (repository.delete(newUserId, testMeal.getId())));
+            System.out.println("test 2 get:" + (repository.get(newUserId, testMeal.getId()) == null));
 
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
             mealRestController.create(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
