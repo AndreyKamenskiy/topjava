@@ -29,11 +29,9 @@
             <label for="toDateInput">До даты (включая)</label>
             <input type="date" id="toDateInput" autocomplete="off" name="toDate"
                    value="${param.toDate}">
-
             <label for="fromTimeInput">От времени (включая)</label>
             <input type="time" id="fromTimeInput" autocomplete="off" name="fromTime"
                    value="${param.fromTime}">
-
             <label for="toTimeInput">До времени (исключая)</label>
             <input type="time" id="toTimeInput" autocomplete="off" name="toTime"
                    value="${param.toTime}">
