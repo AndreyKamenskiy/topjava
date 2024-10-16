@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,8 +59,7 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("getAll");
         return repository.values()
                 .stream()
-                .sorted((lhs, rhs) -> lhs.getName() != null && lhs.getName().equals(rhs.getName()) ?
-                        lhs.getName().compareTo(rhs.getName()) : lhs.getEmail().compareTo(rhs.getEmail()))
+                .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
                 .collect(Collectors.toList());
     }
 
