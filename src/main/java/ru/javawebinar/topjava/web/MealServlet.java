@@ -18,6 +18,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+import static org.springframework.util.StringUtils.hasText;
+
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
@@ -33,7 +35,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        super.destroy();
         log.info("Close spring context");
         appCtx.close();
     }
@@ -43,7 +44,7 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         DateTimeFilter filter = new DateTimeFilter(request);
         String id = request.getParameter("id");
-        Integer mealId = id == null || id.isEmpty() ? null : Integer.parseInt(id);
+        Integer mealId = hasText(id) ? Integer.parseInt(id) : null;
         Meal meal = new Meal(mealId,
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
@@ -97,13 +98,13 @@ public class MealServlet extends HttpServlet {
 
         public DateTimeFilter(HttpServletRequest request) {
             String dateStr = request.getParameter("fromDate");
-            fromDate = dateStr != null && !dateStr.isEmpty() ? LocalDate.parse(dateStr) : null;
+            fromDate = hasText(dateStr) ? LocalDate.parse(dateStr) : null;
             dateStr = request.getParameter("toDate");
-            toDate = dateStr != null && !dateStr.isEmpty() ? LocalDate.parse(dateStr) : null;
+            toDate = hasText(dateStr) ? LocalDate.parse(dateStr) : null;
             String timeStr = request.getParameter("fromTime");
-            fromTime = timeStr != null && !timeStr.isEmpty() ? LocalTime.parse(timeStr) : null;
+            fromTime = hasText(timeStr) ? LocalTime.parse(timeStr) : null;
             timeStr = request.getParameter("toTime");
-            toTime = timeStr != null && !timeStr.isEmpty() ? LocalTime.parse(timeStr) : null;
+            toTime = hasText(timeStr) ? LocalTime.parse(timeStr) : null;
         }
 
         public String getUrl(String url) {
