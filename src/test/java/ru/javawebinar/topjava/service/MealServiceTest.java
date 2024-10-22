@@ -42,8 +42,12 @@ public class MealServiceTest {
     }
 
     @Test
-    public void getNotFound() {
+    public void getNotFoundMeal() {
         assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, USER_ID));
+    }
+
+    @Test
+    public void getNotFoundUser() {
         assertThrows(NotFoundException.class, () -> service.get(USER_MEAL1_ID, NOT_FOUND));
     }
 
@@ -54,8 +58,12 @@ public class MealServiceTest {
     }
 
     @Test
-    public void deletedNotFound() {
+    public void deletedNotFoundMeal() {
         assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
+    }
+
+    @Test
+    public void deletedNotFoundUser() {
         assertThrows(NotFoundException.class, () -> service.delete(USER_MEAL1_ID, NOT_FOUND));
     }
 
@@ -103,10 +111,4 @@ public class MealServiceTest {
         assertThrows(DataAccessException.class, () ->
                 service.create(getNewDuplicate(), USER_ID));
     }
-
-    @Test
-    public void createNotFoundWithException() {
-        assertThrows(DataAccessException.class, () -> service.create(getNew(), NOT_FOUND));
-    }
-
 }

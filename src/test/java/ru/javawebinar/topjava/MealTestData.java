@@ -17,52 +17,25 @@ public class MealTestData {
     public static final LocalDate START_TIME = LocalDate.parse("2024-10-20");
     public static final LocalDate END_TIME = LocalDate.parse("2024-10-20");
 
-    public static final Meal userMeal1 = new Meal(
-            USER_MEAL1_ID,
-            LocalDateTime.parse("2024-10-20T09:51:00"),
-            "завтрак юзера",
-            500
-    );
+    public static final Meal userMeal1 =
+            new Meal(USER_MEAL1_ID, LocalDateTime.of(2024, 10, 20, 9, 51, 0, 0), "завтрак юзера", 500);
 
-    public static final Meal userMeal2 = new Meal(
-            USER_MEAL2_ID,
-            LocalDateTime.parse("2024-10-20T13:51:00"),
-            "обед юзера",
-            500
-    );
+    public static final Meal userMeal2 =
+            new Meal(USER_MEAL2_ID, LocalDateTime.of(2024, 10, 20, 13, 51, 0, 0), "обед юзера", 500);
 
-    public static final Meal userMeal3 = new Meal(
-            USER_MEAL3_ID,
-            LocalDateTime.parse("2024-10-21T19:51:00"),
-            "ужин юзера",
-            500
-    );
+    public static final Meal userMeal3 =
+            new Meal(USER_MEAL3_ID, LocalDateTime.of(2024, 10, 21, 19, 51, 0, 0), "ужин юзера", 500);
 
     public static Meal getNew() {
-        return new Meal(
-                null,
-                LocalDateTime.parse("2024-01-20T12:00:00"),
-                "Новый прием пищи",
-                500
-        );
+        return new Meal(null, LocalDateTime.of(2024, 1, 20, 12, 0, 0, 0), "Новый прием пищи", 500);
     }
 
     public static Meal getUpdated() {
-        return new Meal(
-                USER_MEAL1_ID,
-                LocalDateTime.parse("2021-11-01T15:15:15"),
-                "Измененный обед",
-                1500
-        );
+        return new Meal(USER_MEAL1_ID, LocalDateTime.of(2021, 11, 1, 15, 15, 15, 0), "Измененный обед", 1500);
     }
 
     public static Meal getNewDuplicate() {
-        return new Meal(
-                null,
-                LocalDateTime.parse("2024-10-20T09:51:00"),
-                "завтрак юзера",
-                500
-        );
+        return new Meal(null, userMeal1.getDateTime(), "второй завтрак юзера", 500);
     }
 
     public static void assertMatch(Meal actual, Meal expected) {
