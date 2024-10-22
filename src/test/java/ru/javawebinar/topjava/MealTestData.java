@@ -7,15 +7,16 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
 
-    public static final int USER_MEAL1_ID = 100003;
-    public static final int USER_MEAL2_ID = 100005;
-    public static final int USER_MEAL3_ID = 100004;
+    public static final int USER_MEAL1_ID = START_SEQ + 3;
+    public static final int USER_MEAL2_ID = START_SEQ + 5;
+    public static final int USER_MEAL3_ID = START_SEQ + 4;
 
-    public static final LocalDate START_TIME = LocalDate.parse("2024-10-20");
-    public static final LocalDate END_TIME = LocalDate.parse("2024-10-20");
+    public static final LocalDate START_TIME = LocalDate.of(2024, 10, 20);
+    public static final LocalDate END_TIME = LocalDate.of(2024, 10, 20);
 
     public static final Meal userMeal1 =
             new Meal(USER_MEAL1_ID, LocalDateTime.of(2024, 10, 20, 9, 51, 0, 0), "завтрак юзера", 500);
