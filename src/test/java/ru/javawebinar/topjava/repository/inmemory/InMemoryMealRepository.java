@@ -36,10 +36,10 @@ public class InMemoryMealRepository implements MealRepository {
         save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 21, 0), "Админ ужин", 1500), ADMIN_ID);
     }
 
-
     @Override
     public Meal save(Meal meal, int userId) {
-        InMemoryBaseRepository<Meal> meals = usersMealsMap.computeIfAbsent(userId, uId -> new InMemoryBaseRepository<>());
+        InMemoryBaseRepository<Meal> meals = usersMealsMap.computeIfAbsent(userId,
+                uId -> new InMemoryBaseRepository<>());
         return meals.save(meal);
     }
 
@@ -67,7 +67,8 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        return filterByPredicate(userId, meal -> Util.isBetweenHalfOpen(meal.getDateTime(), startDateTime, endDateTime));
+        return filterByPredicate(userId,
+                meal -> Util.isBetweenHalfOpen(meal.getDateTime(), startDateTime, endDateTime));
     }
 
     @Override

@@ -4,12 +4,6 @@
 
     <bean class="ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository" id="inmemoryUserRepository"/>
 
-    <bean class="ru.javawebinar.topjava.service.UserService" id="inmemoryUserService">
-        <constructor-arg name="repository" ref="inmemoryUserRepository"/>
-    </bean>
-
-    <bean class="ru.javawebinar.topjava.web.user.AdminRestController" id="inmemoryAdminRestController">
-        <constructor-arg name="service" ref="inmemoryUserService"/>
-    </bean>
+    <bean class="ru.javawebinar.topjava.TestBeanPostProcessor" id="testBeanPostProcessor"/>
 
 </beans>
