@@ -3,7 +3,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean class="ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository" id="inmemoryUserRepository"/>
-
-    <bean class="ru.javawebinar.topjava.TestBeanPostProcessor" id="testBeanPostProcessor"/>
+    <bean class="ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository" id="inmemoryMealRepository"/>
 
 </beans>
