@@ -22,22 +22,16 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
+        User user = em.getReference(User.class, userId);
+        meal.setUser(user);
         if (meal.isNew()) {
-            User user = em.find(User.class, userId);
-            meal.setUser(user);
             em.persist(meal);
             return meal;
         }
-        boolean result = em.createQuery("UPDATE Meal SET description=:description, calories=:calories, dateTime=:dateTime " +
-                        " WHERE id=:id AND user.id=:user_id")
-                .setParameter("description", meal.getDescription())
-                .setParameter("calories", meal.getCalories())
-                .setParameter("dateTime", meal.getDateTime())
-                .setParameter("id", meal.getId())
-                .setParameter("user_id", userId)
-                .executeUpdate() > 0;
-
-        return result ? meal : null;
+        if (has(meal.getId(), userId)) {
+            return em.merge(meal);
+        }
+        return null;
     }
 
     @Override
@@ -51,6 +45,10 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
+        /* //this variant make 2 query to DB. We can change it if FetchType for
+           // User in Meal will be EAGER. But it is not optimal.
+        Meal meal = em.find(Meal.class, id);
+        return meal != null && meal.getUser().id() == userId ? meal : null;*/
         List<Meal> meals = em.createNamedQuery(Meal.GET, Meal.class)
                 .setParameter("id", id)
                 .setParameter("userId", userId)
@@ -72,5 +70,13 @@ public class JpaMealRepository implements MealRepository {
                 .setParameter("startDateTime", startDateTime)
                 .setParameter("endDateTime", endDateTime)
                 .getResultList();
+    }
+
+    private boolean has(int mealId, int userId) {
+        List<Integer> meals = em.createNamedQuery(Meal.HAS, Integer.class)
+                .setParameter("id", mealId)
+                .setParameter("userId", userId)
+                .getResultList();
+        return DataAccessUtils.singleResult(meals) != null;
     }
 }

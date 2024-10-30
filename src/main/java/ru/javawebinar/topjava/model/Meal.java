@@ -18,6 +18,8 @@ import java.time.LocalTime;
                 query = "SELECT m FROM Meal m " +
                         "WHERE m.user.id=:userId AND m.dateTime >= :startDateTime AND m.dateTime < :endDateTime " +
                         "ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.HAS,
+                query = "SELECT 1 from Meal m WHERE m.id=:id and m.user.id=:userId")
 })
 @Entity
 @Table(name = "meal", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "date_time"}))
@@ -27,6 +29,7 @@ public class Meal extends AbstractBaseEntity {
     public static final String GET = "Meal.get";
     public static final String GET_ALL = "Meal.getAll";
     public static final String GET_BETWEEN = "Meal.getBetween";
+    public static final String HAS = "Meal.has";
 
     @Column(name = "date_time", nullable = false)
     @NotNull
@@ -80,6 +83,7 @@ public class Meal extends AbstractBaseEntity {
         return dateTime.toLocalTime();
     }
 
+    @SuppressWarnings("unused")
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
