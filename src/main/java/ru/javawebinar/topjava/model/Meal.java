@@ -28,20 +28,17 @@ public class Meal extends AbstractBaseEntity {
     public static final String GET_ALL = "Meal.getAll";
     public static final String GET_BETWEEN = "Meal.getBetween";
 
-
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
     @Size(max = 250)
-    @NotNull
     @NotBlank
     private String description;
 
     @Column(name = "calories", nullable = false)
     @Range(min = 10, max = 5000)
-    @NotNull
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
