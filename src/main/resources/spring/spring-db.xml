@@ -44,7 +44,21 @@
     </beans>
 
     <beans profile="jdbc">
-        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
+        <beans profile="hsqldb">
+            <bean id="jdbcMealRepository" class = "ru.javawebinar.topjava.repository.jdbc.JdbcMealRepositoryHsqldb" />
+        </beans>
+    </beans>
+
+    <beans profile="jdbc">
+        <beans profile="postgres">
+            <bean id="jdbcMealRepository" class = "ru.javawebinar.topjava.repository.jdbc.JdbcMealRepository" />
+        </beans>
+    </beans>
+
+    <beans profile="jdbc">
+<!--        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>-->
+
+        <bean id="jdbcUserRepository" class = "ru.javawebinar.topjava.repository.jdbc.JdbcUserRepository" />
 
         <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
             <constructor-arg ref="dataSource"/>
