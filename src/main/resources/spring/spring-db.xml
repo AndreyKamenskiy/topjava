@@ -45,13 +45,13 @@
 
     <beans profile="jdbc">
         <beans profile="hsqldb">
-            <bean id="jdbcMealRepository" class = "ru.javawebinar.topjava.repository.jdbc.JdbcMealRepositoryHsqldb" />
+            <bean id="jdbcMealRepository" class = "ru.javawebinar.topjava.repository.jdbc.HsqldbJdbcMealRepository" />
         </beans>
     </beans>
 
     <beans profile="jdbc">
         <beans profile="postgres">
-            <bean id="jdbcMealRepository" class = "ru.javawebinar.topjava.repository.jdbc.JdbcMealRepository" />
+            <bean id="jdbcMealRepository" class = "ru.javawebinar.topjava.repository.jdbc.PostgresJdbcMealRepository" />
         </beans>
     </beans>
 
