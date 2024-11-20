@@ -3,9 +3,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
-<jsp:include page="/WEB-INF/jsp/fragments/headTag.jsp"/>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
-<jsp:include page="/WEB-INF/jsp/fragments/bodyHeader.jsp"/>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <hr>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
@@ -30,6 +30,6 @@
         <button onclick="window.history.back()" type="button"><spring:message code="mealForm.cancel"/></button>
     </form>
 </section>
-<jsp:include page="/WEB-INF/jsp/fragments/footer.jsp"/>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
