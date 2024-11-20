@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.AbstractMealServiceValidationTest;
+import ru.javawebinar.topjava.service.AbstractMealServiceJpaAndDataJpaTest;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -13,7 +13,7 @@ import static ru.javawebinar.topjava.Profiles.DATAJPA;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 @ActiveProfiles(DATAJPA)
-public class DataJpaMealServiceTest extends AbstractMealServiceValidationTest {
+public class DataJpaMealServiceTest extends AbstractMealServiceJpaAndDataJpaTest {
     @Test
     public void getWithUser() {
         Meal adminMeal = service.getWithUser(ADMIN_MEAL_ID, ADMIN_ID);

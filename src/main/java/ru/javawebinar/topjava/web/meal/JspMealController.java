@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava.web.meal;
 
-
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,20 +25,22 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 public class JspMealController extends AbstractMealController {
 
     public JspMealController(MealService service) {
-        super(service);
+        super(service, LoggerFactory.getLogger(JspMealController.class));
     }
 
     @GetMapping()
-    public String meals(Model model, HttpServletRequest request) {
+    public String meals(Model model) {
+        model.addAttribute("meals", getAll());
+        return "meals";
+    }
+
+    @GetMapping(params = {"action=filter"})
+    public String filtered(Model model, HttpServletRequest request) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
         LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
         LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
-        if (startDate != null || endDate != null || startTime != null || endTime != null) {
-            model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
-        } else {
-            model.addAttribute("meals", getAll());
-        }
+        model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
         return "meals";
     }
 
@@ -56,7 +58,6 @@ public class JspMealController extends AbstractMealController {
 
     @PostMapping(value = "/update/{id}")
     public String postUpdate(HttpServletRequest request, @PathVariable String id) throws IOException {
-        request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
@@ -73,7 +74,6 @@ public class JspMealController extends AbstractMealController {
 
     @PostMapping(value = "/create")
     public String postCreate(HttpServletRequest request) throws IOException {
-        request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),

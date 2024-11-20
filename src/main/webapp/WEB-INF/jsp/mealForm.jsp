@@ -9,16 +9,8 @@
 <section>
     <hr>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-<%--    <h2><spring:message code="${meal.isNew() ? "mealForm.createMeal" : "mealForm.createMeal"}" /></h2>--%>
     <h2>
-        <c:choose>
-            <c:when test="${meal.isNew()}">
-                <spring:message code="mealForm.create"/>
-            </c:when>
-            <c:otherwise>
-                <spring:message code="meal.update"/>
-            </c:otherwise>
-        </c:choose>
+        <spring:message code="${meal.isNew() ? 'mealForm.create' : 'meal.update'}"/>
     </h2>
     <form method="post">
         <input type="hidden" name="id" value="${meal.id}">

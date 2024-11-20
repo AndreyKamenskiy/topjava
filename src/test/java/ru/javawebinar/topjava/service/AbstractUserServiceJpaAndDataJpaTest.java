@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class AbstractUserServiceValidationTest extends AbstractUserServiceTest {
+public abstract class AbstractUserServiceJpaAndDataJpaTest extends AbstractUserServiceTest {
 
     @Autowired
     private CacheManager cacheManager;
