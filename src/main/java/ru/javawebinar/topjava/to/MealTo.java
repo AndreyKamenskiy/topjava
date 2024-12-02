@@ -5,7 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
-public record MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+public class MealTo {
+    private final Integer id;
+
+    private final LocalDateTime dateTime;
+
+    private final String description;
+
+    private final int calories;
+
+    private final boolean excess;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public MealTo(
@@ -19,6 +28,26 @@ public record MealTo(Integer id, LocalDateTime dateTime, String description, int
         this.description = description;
         this.calories = calories;
         this.excess = excess;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public boolean isExcess() {
+        return excess;
     }
 
     @Override
