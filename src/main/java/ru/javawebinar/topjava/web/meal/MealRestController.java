@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.formatters.CustomDateTimeFormat;
+import ru.javawebinar.topjava.util.formatters.DateTime;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -55,6 +57,18 @@ public class MealRestController extends AbstractMealController {
                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                LocalDateTime endDateTime) {
         return getBetween(startDateTime, endDateTime);
+    }
+
+    @GetMapping("/filtercustomdatetime")
+    public List<MealTo> filter(@RequestParam
+                               @Nullable
+                               @CustomDateTimeFormat
+                               DateTime startDateTime,
+                               @Nullable
+                               @RequestParam
+                               @CustomDateTimeFormat
+                               DateTime endDateTime) {
+        return getBetween(startDateTime.date(), startDateTime.time(), endDateTime.date(), endDateTime.time());
     }
 
     @DeleteMapping("/{id}")

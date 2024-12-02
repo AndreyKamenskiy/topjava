@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.web.meal;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -147,6 +149,32 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_TO_MATCHER.contentJson(expected));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            ",,,,,",
+            "10:00, 14:00, , , 10:00, 14:00",
+            "2020-01-30T10:00:00, 2020-01-30T14:00:00, 2020-01-30, 2020-01-30, 10:00, 14:00",
+            "2020-01-30, 2020-01-30, 2020-01-30, 2020-01-30, , "
+    })
+    void getFilteredDateTime(String startDateTime,
+                             String endDateTime,
+                             LocalDate startDate,
+                             LocalDate endDate,
+                             LocalTime startTime,
+                             LocalTime endTime) throws Exception {
+        String path = "filtercustomdatetime?" +
+                "startDateTime=" + (startDateTime == null ? "" : startDateTime) +
+                "&" +
+                "endDateTime=" + (endDateTime == null ? "" : endDateTime);
+        List<Meal> filteredByDates = mealService.getBetweenInclusive(startDate, endDate, USER_ID);
+        List<MealTo> expected = getFilteredTos(filteredByDates, user.getCaloriesPerDay(), startTime, endTime);
+        perform(MockMvcRequestBuilders.get(REST_URL + path))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_TO_MATCHER.contentJson(expected));
+
     }
 
 }
